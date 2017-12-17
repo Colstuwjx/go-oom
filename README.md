@@ -43,3 +43,11 @@ Em.. saddly to see that container process was killed by `kill -9`, and the conta
 
 ...
 ```
+
+container logs here:
+
+```
+...
+already used  18012160  bytes!
+Killed  // directly be killed...
+```
