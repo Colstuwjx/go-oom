@@ -111,7 +111,7 @@ import (
 	"github.com/sahne/eventfd"
 )
 
-func perform_fork() {
+func perform_malloc() {
 	var (
 		// malloc_size    = 1024 * 1024 // bytes
 		// print_interval = 100
@@ -223,7 +223,7 @@ func main() {
 	go watchEventFd(eventReady)
 	<-eventReady
 
-	go perform_fork()
+	go perform_malloc()
 
 	<-done
 	log.Println("exiting")
