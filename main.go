@@ -8,6 +8,7 @@ package main
 #include <libgen.h>
 #include <limits.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
@@ -202,6 +203,7 @@ func watchEventFd(ready chan bool) {
 
 func main() {
 	oomSet := flag.Int("oom-set", 200, "an integer for oom set")
+	flag.Parse()
 
 	// PLAN A: test failed, OOM killer send `kill -9`...
 	sig := make(chan os.Signal, 1)
@@ -226,7 +228,7 @@ func main() {
 	go watchEventFd(eventReady)
 	<-eventReady
 
-	go perform_malloc(oomSet)
+	go perform_malloc(*oomSet)
 
 	<-done
 	log.Println("exiting")
