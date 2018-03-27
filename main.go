@@ -101,6 +101,7 @@ int listen(int argc, int efd, char **argv)
 import "C"
 
 import (
+	"flag"
 	"log"
 	"os"
 	"os/signal"
@@ -111,14 +112,14 @@ import (
 	"github.com/sahne/eventfd"
 )
 
-func perform_malloc() {
+func perform_malloc(oomSet int) {
 	var (
 		// malloc_size    = 1024 * 1024 // bytes
 		// print_interval = 100
 		// num_chunks     = 20 * 1024
 		malloc_size    = 1024 // bytes
 		print_interval = 100
-		num_chunks     = 20 * 1024
+		num_chunks     = oomSet * 1024
 		chunk          []byte
 		chunks         [][]byte
 	)
@@ -200,6 +201,8 @@ func watchEventFd(ready chan bool) {
 }
 
 func main() {
+	oomSet := flag.Int("oom-set", 200, "an integer for oom set")
+
 	// PLAN A: test failed, OOM killer send `kill -9`...
 	sig := make(chan os.Signal, 1)
 	done := make(chan bool, 1)
@@ -223,7 +226,7 @@ func main() {
 	go watchEventFd(eventReady)
 	<-eventReady
 
-	go perform_malloc()
+	go perform_malloc(oomSet)
 
 	<-done
 	log.Println("exiting")
